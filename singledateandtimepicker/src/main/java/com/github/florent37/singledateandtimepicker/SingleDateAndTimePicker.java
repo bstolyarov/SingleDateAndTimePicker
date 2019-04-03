@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.text.format.DateFormat;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -471,7 +472,7 @@ public class SingleDateAndTimePicker extends LinearLayout {
         if (date != null) {
             this.defaultDate = date;
             
-            updateDaysOfMonth();
+            updateDaysOfMonth(date);
 
             for (WheelPicker picker : pickers) {
                 picker.setDefaultDate(defaultDate);
@@ -505,6 +506,12 @@ public class SingleDateAndTimePicker extends LinearLayout {
 
     private void updateDaysOfMonth() {
         final Date date = getDate();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        updateDaysOfMonth(calendar);
+    }
+
+    private void updateDaysOfMonth(Date date) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         updateDaysOfMonth(calendar);
