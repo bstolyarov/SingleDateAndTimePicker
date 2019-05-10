@@ -85,6 +85,7 @@ public class SingleDateAndTimePicker extends LinearLayout {
     private boolean displayHours = true;
 
     private boolean isAmPm;
+    private ArrayList<Long> availableDates;
 
     public SingleDateAndTimePicker(Context context) {
         this(context, null);
@@ -123,6 +124,39 @@ public class SingleDateAndTimePicker extends LinearLayout {
 
         init(context, attrs);
     }
+
+/*
+    public SingleDateAndTimePicker(ArrayList<Long> availableDates, Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        this.availableDates = availableDates;
+
+        defaultDate = new Date();
+        isAmPm = !(DateFormat.is24HourFormat(context));
+
+        inflate(context, R.layout.single_day_picker, this);
+
+        yearsPicker = findViewById(R.id.yearPicker);
+        monthPicker = findViewById(R.id.monthPicker);
+        daysOfMonthPicker = findViewById(R.id.daysOfMonthPicker);
+        daysPicker = findViewById(R.id.daysPicker);
+        minutesPicker = findViewById(R.id.minutesPicker);
+        hoursPicker = findViewById(R.id.hoursPicker);
+        amPmPicker = findViewById(R.id.amPmPicker);
+        dtSelector = findViewById(R.id.dtSelector);
+
+        pickers.addAll(Arrays.asList(
+                daysPicker,
+                minutesPicker,
+                hoursPicker,
+                amPmPicker,
+                daysOfMonthPicker,
+                monthPicker,
+                yearsPicker
+        ));
+
+        init(context, attrs);
+    }
+*/
 
     @Override
     protected void onAttachedToWindow() {
@@ -480,6 +514,18 @@ public class SingleDateAndTimePicker extends LinearLayout {
         }
     }
 
+    public void setDefaultDateFromAvailable(Date date, ArrayList<Long> availableDates) {
+        if (date != null) {
+            this.defaultDate = date;
+
+            updateDaysOfMonth(availableDates);
+
+            for (WheelPicker picker : pickers) {
+                picker.setDefaultDate(defaultDate);
+            }
+        }
+    }
+
     public void selectDate(Calendar calendar) {
         if (calendar == null) {
             return;
@@ -521,6 +567,22 @@ public class SingleDateAndTimePicker extends LinearLayout {
         int daysInMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
         daysOfMonthPicker.setDaysInMonth(daysInMonth);
         daysOfMonthPicker.updateAdapter();
+    }
+
+    private void updateDaysOfMonth(ArrayList<Long> availableDates) {
+//        boolean samedate = isTheSameDay(date1, date2);
+
+        daysOfMonthPicker.setDaysInMonth(daysInMonth);
+        daysOfMonthPicker.updateAdapter();
+    }
+
+    public boolean isTheSameDay(Date date1, Date date2) {
+        Calendar cal1 = Calendar.getInstance();
+        Calendar cal2 = Calendar.getInstance();
+        cal1.setTime(date1);
+        cal2.setTime(date2);
+        return cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR) &&
+                cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR);
     }
 
     public void setMustBeOnFuture(boolean mustBeOnFuture) {
@@ -582,6 +644,17 @@ public class SingleDateAndTimePicker extends LinearLayout {
         if (displayDaysOfMonth) {
             updateDaysOfMonth(Calendar.getInstance());
         }
+    }
+
+    public void setAvailableDates(ArrayList<Long> availableDates) {
+        this.availableDates = availableDates;
+        for (WheelPicker picker:pickers) {
+            picker.setAvailableDates(availableDates);
+        }
+    }
+
+    public ArrayList<Long> getAvailableDates() {
+        return availableDates;
     }
 
     public interface OnDateChangedListener {

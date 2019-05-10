@@ -64,6 +64,39 @@ public class WheelHourPicker extends WheelPicker<String> {
         return hours;
     }
 
+
+    @Override
+    protected List<String> generateAvailableAdapterValues() {
+
+        final List<String> hours = new ArrayList<>();
+
+        for (Long date : availableDates) {
+            final String formattedHour = getFormattedValue(new Date(date));
+            boolean isHourAdded = false;
+            for (String hour : hours) {
+                if (hour.equals(formattedHour)) {
+                    isHourAdded = true;
+                }
+            }
+            if (!isHourAdded) {
+                hours.add(formattedHour);
+            }
+        }
+
+/*        if (isAmPm) {
+            hours.add(getFormattedValue(12));
+            for (int hour = hoursStep; hour < maxHour; hour += hoursStep) {
+                hours.add(getFormattedValue(hour));
+            }
+        } else {
+            for (int hour = minHour; hour <= maxHour; hour += hoursStep) {
+                hours.add(getFormattedValue(hour));
+            }
+        }*/
+        return hours;
+    }
+
+
     @Override
     public int findIndexOfDate(@NonNull Date date) {
         if (isAmPm) {
@@ -184,4 +217,5 @@ public class WheelHourPicker extends WheelPicker<String> {
     public interface OnHourChangedListener {
         void onHourChanged(WheelHourPicker picker, int hour);
     }
+
 }

@@ -3,6 +3,7 @@ package com.github.florent37.singledateandtimepicker.widget;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
+import android.util.Log;
 
 import com.github.florent37.singledateandtimepicker.DateHelper;
 import com.github.florent37.singledateandtimepicker.R;
@@ -57,7 +58,7 @@ public class WheelDayPicker extends WheelPicker<String> {
 
     @Override
     protected void onItemSelected(int position, String item) {
-        if (onDaySelectedListener != null) {
+        if (onDaySelectedListener != null && position != -1) {
             final Date date = convertItemToDate(position);
             onDaySelectedListener.onDaySelected(this, position, item, date);
         }
@@ -83,6 +84,44 @@ public class WheelDayPicker extends WheelPicker<String> {
             instance.add(Calendar.DATE, 1);
             days.add(getFormattedValue(instance.getTime()));
         }
+
+        return days;
+    }
+
+    @Override
+    protected List<String> generateAvailableAdapterValues() {
+
+        final List<String> days = new ArrayList<>();
+
+        for (Long date : availableDates) {
+            final String formattedDay = getFormattedValue(date);
+            boolean isDayAdded = false;
+            for (String day : days) {
+                if (day.equals(formattedDay)) {
+                    isDayAdded = true;
+                }
+            }
+            if(!isDayAdded) {
+                days.add(formattedDay);
+            }
+        }
+
+/*        Calendar instance = Calendar.getInstance();
+        instance.add(Calendar.DATE, -1 * DAYS_PADDING - 1);
+        for (int i = (-1) * DAYS_PADDING; i < 0; ++i) {
+            instance.add(Calendar.DAY_OF_MONTH, 1);
+            days.add(getFormattedValue(instance.getTime()));
+        }*/
+
+/*        //today
+        days.add(getTodayText());
+
+        instance = Calendar.getInstance();
+
+        for (int i = 0; i < DAYS_PADDING; ++i) {
+            instance.add(Calendar.DATE, 1);
+            days.add(getFormattedValue(instance.getTime()));
+        }*/
 
         return days;
     }
@@ -113,6 +152,7 @@ public class WheelDayPicker extends WheelPicker<String> {
     }
 
     private Date convertItemToDate(int itemPosition) {
+        Log.d("WheelDayPicker", "convertItemToDate itemPosition" + itemPosition);
         Date date = null;
         final String itemText = adapter.getItemText(itemPosition);
         final Calendar todayCalendar = Calendar.getInstance();

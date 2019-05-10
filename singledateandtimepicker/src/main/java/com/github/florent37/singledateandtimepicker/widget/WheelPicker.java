@@ -133,6 +133,8 @@ public abstract class WheelPicker<V> extends View {
         }
     };
 
+    protected ArrayList<Long> availableDates;
+
     public WheelPicker(Context context) {
         this(context, null);
     }
@@ -192,7 +194,20 @@ public abstract class WheelPicker<V> extends View {
         notifyDatasetChanged();
     }
 
+    public void setAvailableDates(ArrayList<Long> availableDates) {
+        this.availableDates = availableDates;
+        adapter.setData(generateAvailableAdapterValues());
+//        if (getVisibleItemCount() > adapter.data.size()) {
+//            setVisibleItemCount(adapter.data.size());
+//        }
+        notifyDatasetChanged();
+    }
+
     protected abstract List<V> generateAdapterValues();
+
+    protected List<V> generateAvailableAdapterValues() {
+        return generateAdapterValues();
+    }
 
     @Override
     protected void onAttachedToWindow() {
@@ -202,13 +217,20 @@ public abstract class WheelPicker<V> extends View {
     }
 
     private void updateVisibleItemCount() {
-        if (mVisibleItemCount < 2) {
-            throw new ArithmeticException("Wheel's visible item count can not be less than 2!");
-        }
+//        if (mVisibleItemCount < 2) {
+//            throw new ArithmeticException("Wheel's visible item count can not be less than 2!");
+//        }
+        if (mVisibleItemCount <= 1) {
+            mDrawnItemCount = mVisibleItemCount;
+            mHalfDrawnItemCount = 0;
+//            setCyclic(false);
+        } else {
+            if (mVisibleItemCount % 2 == 0) mVisibleItemCount += 1;
+            mDrawnItemCount = mVisibleItemCount + 2;
 
-        if (mVisibleItemCount % 2 == 0) mVisibleItemCount += 1;
-        mDrawnItemCount = mVisibleItemCount + 2;
+        }
         mHalfDrawnItemCount = mDrawnItemCount / 2;
+
     }
 
     private void computeTextSize() {
