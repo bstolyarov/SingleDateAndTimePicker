@@ -32,8 +32,10 @@ import com.github.florent37.singledateandtimepicker.R;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 public abstract class WheelPicker<V> extends View {
 
@@ -134,6 +136,7 @@ public abstract class WheelPicker<V> extends View {
     };
 
     protected ArrayList<Long> availableDates;
+    protected Map<String, List<String>> sortedAvailableDates = new HashMap<>();
 
     public WheelPicker(Context context) {
         this(context, null);
@@ -194,12 +197,14 @@ public abstract class WheelPicker<V> extends View {
         notifyDatasetChanged();
     }
 
+    public void updateAdapter(List<V> data) {
+        adapter.setData(data);
+        notifyDatasetChanged();
+    }
+
     public void setAvailableDates(ArrayList<Long> availableDates) {
         this.availableDates = availableDates;
         adapter.setData(generateAvailableAdapterValues());
-//        if (getVisibleItemCount() > adapter.data.size()) {
-//            setVisibleItemCount(adapter.data.size());
-//        }
         notifyDatasetChanged();
     }
 
@@ -279,6 +284,14 @@ public abstract class WheelPicker<V> extends View {
     public void setDefaultDate(Date date) {
         if (adapter != null && adapter.getItemCount() > 0) {
             final int indexOfDate = findIndexOfDate(date);
+            this.defaultValue = adapter.getData().get(indexOfDate);
+            setSelectedItemPosition(indexOfDate);
+        }
+    }
+
+    public void setDefaultDateFromAvailable(Date date) {
+        if (adapter != null && adapter.getItemCount() > 0) {
+            final int indexOfDate = findIndexOfDateFromAvailable(date);
             this.defaultValue = adapter.getData().get(indexOfDate);
             setSelectedItemPosition(indexOfDate);
         }
@@ -1003,6 +1016,20 @@ public abstract class WheelPicker<V> extends View {
                 return i;
             }
         }
+        return index;
+    }
+
+    public int findIndexOfDateFromAvailable(@NonNull Date date) {
+        final Long dateInMill = date.getTime();
+        int index = 0;
+        final int itemCount = availableDates.size();
+        for (int i = 0; i < itemCount; i++) {
+            if (dateInMill.equals(availableDates.get(i))) {
+                index = i;
+                break;
+            }
+        }
+
         return index;
     }
 

@@ -20,7 +20,8 @@ import static com.github.florent37.singledateandtimepicker.widget.SingleDateAndT
 
 public class WheelDayPicker extends WheelPicker<String> {
 
-    private static final String DAY_FORMAT_PATTERN = "EEE d MMM";
+    public static final String DAY_FORMAT_PATTERN = "EEE d MMM";
+    public static final String DAY_AND_HOUR_FORMAT_PATTERN = "EEE d MMM H";
 
     private SimpleDateFormat simpleDateFormat;
     private SimpleDateFormat customDateFormat;
@@ -90,9 +91,7 @@ public class WheelDayPicker extends WheelPicker<String> {
 
     @Override
     protected List<String> generateAvailableAdapterValues() {
-
         final List<String> days = new ArrayList<>();
-
         for (Long date : availableDates) {
             final String formattedDay = getFormattedValue(date);
             boolean isDayAdded = false;
@@ -105,32 +104,14 @@ public class WheelDayPicker extends WheelPicker<String> {
                 days.add(formattedDay);
             }
         }
-
-/*        Calendar instance = Calendar.getInstance();
-        instance.add(Calendar.DATE, -1 * DAYS_PADDING - 1);
-        for (int i = (-1) * DAYS_PADDING; i < 0; ++i) {
-            instance.add(Calendar.DAY_OF_MONTH, 1);
-            days.add(getFormattedValue(instance.getTime()));
-        }*/
-
-/*        //today
-        days.add(getTodayText());
-
-        instance = Calendar.getInstance();
-
-        for (int i = 0; i < DAYS_PADDING; ++i) {
-            instance.add(Calendar.DATE, 1);
-            days.add(getFormattedValue(instance.getTime()));
-        }*/
-
         return days;
     }
 
-    protected String getFormattedValue(Object value) {
+    public String getFormattedValue(Object value) {
         return getDateFormat().format(value);
     }
 
-    public WheelDayPicker setDayFormatter(SimpleDateFormat simpleDateFormat){
+    public WheelDayPicker setDayFormatter(SimpleDateFormat simpleDateFormat) {
         this.customDateFormat = simpleDateFormat;
         updateAdapter();
         return this;

@@ -8,7 +8,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.text.format.DateFormat;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -26,6 +25,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -210,6 +210,10 @@ public class SingleDateAndTimePicker extends LinearLayout {
                 .setOnDaySelectedListener(new WheelDayPicker.OnDaySelectedListener() {
                     @Override
                     public void onDaySelected(WheelDayPicker picker, int position, String name, Date date) {
+                        if (availableDates != null && !availableDates.isEmpty()) {
+                            updateHoursPicker(name);
+                            updateMinutesPicker(null);
+                        }
                         updateListener();
                         checkMinMaxDate(picker);
                     }
@@ -240,6 +244,9 @@ public class SingleDateAndTimePicker extends LinearLayout {
                 .setHourChangedListener(new WheelHourPicker.OnHourChangedListener() {
                     @Override
                     public void onHourChanged(WheelHourPicker picker, int hour) {
+                        if (availableDates != null && !availableDates.isEmpty()) {
+                            updateMinutesPicker(daysPicker.getFormattedValue(daysPicker.getCurrentDate()) + " " + hour);
+                        }
                         updateListener();
                         checkMinMaxDate(picker);
                     }
@@ -255,6 +262,14 @@ public class SingleDateAndTimePicker extends LinearLayout {
                 });
 
         setDefaultDate(this.defaultDate); //update displayed date
+    }
+
+    private void updateHoursPicker(String day) {
+        hoursPicker.updateAdapter(hoursPicker.getAvailableDates(day));
+    }
+
+    private void updateMinutesPicker(String day) {
+        minutesPicker.updateAdapter(minutesPicker.getAvailableDates(day));
     }
 
     @Override
@@ -514,14 +529,12 @@ public class SingleDateAndTimePicker extends LinearLayout {
         }
     }
 
-    public void setDefaultDateFromAvailable(Date date, ArrayList<Long> availableDates) {
+    public void setDefaultDateFromAvailable(Date date) {
         if (date != null) {
             this.defaultDate = date;
-
-            updateDaysOfMonth(availableDates);
-
+            updateDaysOfMonth(availableDates, date);
             for (WheelPicker picker : pickers) {
-                picker.setDefaultDate(defaultDate);
+                picker.setDefaultDateFromAvailable(defaultDate);
             }
         }
     }
@@ -569,19 +582,25 @@ public class SingleDateAndTimePicker extends LinearLayout {
         daysOfMonthPicker.updateAdapter();
     }
 
-    private void updateDaysOfMonth(ArrayList<Long> availableDates) {
-//        boolean samedate = isTheSameDay(date1, date2);
-
-        daysOfMonthPicker.setDaysInMonth(daysInMonth);
+    private void updateDaysOfMonth(ArrayList<Long> availableDates, Date date) {
+        ArrayList<String> days = new ArrayList<>();
+        String formattedDate;
+        for (Long availableDate : availableDates) {
+            formattedDate = daysPicker.getFormattedValue(availableDate);
+            if (isTheSameMonth(new Date(availableDate), date) && Collections.frequency(days, formattedDate) < 1) {
+                days.add(formattedDate);
+            }
+        }
+        daysOfMonthPicker.setDaysInMonth(days.size());
         daysOfMonthPicker.updateAdapter();
     }
 
-    public boolean isTheSameDay(Date date1, Date date2) {
+    public boolean isTheSameMonth(Date date1, Date date2) {
         Calendar cal1 = Calendar.getInstance();
         Calendar cal2 = Calendar.getInstance();
         cal1.setTime(date1);
         cal2.setTime(date2);
-        return cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR) &&
+        return cal1.get(Calendar.MONTH) == cal2.get(Calendar.MONTH) &&
                 cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR);
     }
 

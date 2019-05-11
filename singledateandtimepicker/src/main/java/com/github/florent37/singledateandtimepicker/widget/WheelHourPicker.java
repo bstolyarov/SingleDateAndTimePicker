@@ -4,8 +4,10 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -67,35 +69,37 @@ public class WheelHourPicker extends WheelPicker<String> {
 
     @Override
     protected List<String> generateAvailableAdapterValues() {
-
-        final List<String> hours = new ArrayList<>();
-
+        List<String> hours;
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(WheelDayPicker.DAY_FORMAT_PATTERN, getCurrentLocale());
+        String formattedDay;
+        String formattedHour;
+        Date tempDate;
         for (Long date : availableDates) {
-            final String formattedHour = getFormattedValue(new Date(date));
-            boolean isHourAdded = false;
-            for (String hour : hours) {
-                if (hour.equals(formattedHour)) {
-                    isHourAdded = true;
+            tempDate = new Date(date);
+            formattedDay = simpleDateFormat.format(tempDate);
+            formattedHour = getFormattedValue(tempDate);
+            if (sortedAvailableDates.containsKey(formattedDay)) {
+                hours = sortedAvailableDates.get(formattedDay);
+                if (hours != null && Collections.frequency(hours, formattedHour) == 0) {
+                    hours.add(formattedHour);
+                    sortedAvailableDates.put(formattedDay, hours);
                 }
-            }
-            if (!isHourAdded) {
+            } else {
+                hours = new ArrayList<>();
                 hours.add(formattedHour);
+                sortedAvailableDates.put(formattedDay, hours);
             }
         }
-
-/*        if (isAmPm) {
-            hours.add(getFormattedValue(12));
-            for (int hour = hoursStep; hour < maxHour; hour += hoursStep) {
-                hours.add(getFormattedValue(hour));
-            }
-        } else {
-            for (int hour = minHour; hour <= maxHour; hour += hoursStep) {
-                hours.add(getFormattedValue(hour));
-            }
-        }*/
-        return hours;
+        return getAvailableDates(null);
     }
 
+    public List<String> getAvailableDates(String day) {
+        if (day == null && !availableDates.isEmpty()) {
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(WheelDayPicker.DAY_FORMAT_PATTERN, getCurrentLocale());
+            day = simpleDateFormat.format(new Date(availableDates.get(0)));
+        }
+        return sortedAvailableDates.get(day);
+    }
 
     @Override
     public int findIndexOfDate(@NonNull Date date) {

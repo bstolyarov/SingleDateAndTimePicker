@@ -6,8 +6,10 @@ import android.util.AttributeSet;
 
 import com.github.florent37.singledateandtimepicker.DateHelper;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -48,6 +50,41 @@ public class WheelMinutePicker extends WheelPicker<String> {
         }
         return minutes;
     }
+
+    @Override
+    protected List<String> generateAvailableAdapterValues() {
+        List<String> minutes;
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(WheelDayPicker.DAY_AND_HOUR_FORMAT_PATTERN, getCurrentLocale());
+        String formattedDayAndHour;
+        String formattedMinute;
+        Date tempDate;
+        for (Long date : availableDates) {
+            tempDate = new Date(date);
+            formattedDayAndHour = simpleDateFormat.format(tempDate);
+            formattedMinute = getFormattedValue(tempDate);
+            if (sortedAvailableDates.containsKey(formattedDayAndHour)) {
+                minutes = sortedAvailableDates.get(formattedDayAndHour);
+                if (minutes != null && Collections.frequency(minutes, formattedMinute) == 0) {
+                    minutes.add(formattedMinute);
+                    sortedAvailableDates.put(formattedDayAndHour, minutes);
+                }
+            } else {
+                minutes = new ArrayList<>();
+                minutes.add(formattedMinute);
+                sortedAvailableDates.put(formattedDayAndHour, minutes);
+            }
+        }
+        return getAvailableDates(null);
+    }
+
+    public List<String> getAvailableDates(String day) {
+        if (day == null && !availableDates.isEmpty()) {
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(WheelDayPicker.DAY_AND_HOUR_FORMAT_PATTERN, getCurrentLocale());
+            day = simpleDateFormat.format(new Date(availableDates.get(0)));
+        }
+        return sortedAvailableDates.get(day);
+    }
+
 
     private int findIndexOfMinute(int minute) {
         final int itemCount = adapter.getItemCount();
