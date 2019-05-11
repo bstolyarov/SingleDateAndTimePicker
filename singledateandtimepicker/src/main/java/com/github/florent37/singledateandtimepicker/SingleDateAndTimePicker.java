@@ -98,7 +98,7 @@ public class SingleDateAndTimePicker extends LinearLayout {
     public SingleDateAndTimePicker(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
-        defaultDate = new Date();
+//        defaultDate = new Date();
         isAmPm = !(DateFormat.is24HourFormat(context));
 
         inflate(context, R.layout.single_day_picker, this);
@@ -261,7 +261,7 @@ public class SingleDateAndTimePicker extends LinearLayout {
                     }
                 });
 
-        setDefaultDate(this.defaultDate); //update displayed date
+//        setDefaultDate(this.defaultDate); //update displayed date
     }
 
     private void updateHoursPicker(String day) {
