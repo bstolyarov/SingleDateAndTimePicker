@@ -52,7 +52,7 @@ public class SingleDatePickerMainActivity extends AppCompatActivity {
                 Log.d("MainActivity", "simpleDateFormat: " + simpleDateFormat.format(singleDateAndTimePicker.getDate()));
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTimeInMillis(dates.get(2));
-                singleDateAndTimePicker.selectDateFromAvailableDates(calendar);
+                singleDateAndTimePicker.setDefaultDateFromAvailable(calendar.getTime());
 //                singleDateAndTimePicker.setVisibility(View.VISIBLE);
             }
         });
