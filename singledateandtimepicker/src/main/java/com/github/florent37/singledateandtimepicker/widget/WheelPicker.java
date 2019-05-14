@@ -1026,10 +1026,11 @@ public abstract class WheelPicker<V> extends View {
 
     public int findIndexOfDateFromAvailable(@NonNull Date date) {
         final Long dateInMill = date.getTime();
+        final String formattedDate = getFormattedValue(date);
         int index = 0;
-        final int itemCount = availableDates.size();
+        final int itemCount = adapter.data.size();
         for (int i = 0; i < itemCount; i++) {
-            if (dateInMill.equals(availableDates.get(i))) {
+            if (formattedDate.equals(adapter.data.get(i))) {
                 index = i;
                 break;
             }
