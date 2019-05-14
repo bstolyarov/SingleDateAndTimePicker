@@ -136,7 +136,7 @@ public abstract class WheelPicker<V> extends View {
     };
 
     protected ArrayList<Long> availableDates;
-    protected Map<String, List<String>> sortedAvailableDates = new HashMap<>();
+    public Map<String, List<String>> sortedAvailableDates = new HashMap<>();
 
     public WheelPicker(Context context) {
         this(context, null);
@@ -1155,7 +1155,11 @@ public abstract class WheelPicker<V> extends View {
 
         public void setData(List<V> data) {
             this.data.clear();
-            this.data.addAll(data);
+            try {
+                this.data.addAll(data);
+            } catch (NullPointerException e) {
+                e.printStackTrace();
+            }
         }
 
         public void addData(List<V> data) {

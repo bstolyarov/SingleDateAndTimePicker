@@ -86,6 +86,7 @@ public class SingleDateAndTimePicker extends LinearLayout {
 
     private boolean isAmPm;
     private ArrayList<Long> availableDates;
+    private String tempString = "";
 
     public SingleDateAndTimePicker(Context context) {
         this(context, null);
@@ -212,7 +213,9 @@ public class SingleDateAndTimePicker extends LinearLayout {
                     public void onDaySelected(WheelDayPicker picker, int position, String name, Date date) {
                         if (availableDates != null && !availableDates.isEmpty()) {
                             updateHoursPicker(name);
-                            updateMinutesPicker(null);
+
+//                            updateMinutesPicker(null);
+                            updateMinutesPicker(name + " " + hoursPicker.sortedAvailableDates.get(name).get(0));
                         }
                         updateListener();
                         checkMinMaxDate(picker);
@@ -245,7 +248,12 @@ public class SingleDateAndTimePicker extends LinearLayout {
                     @Override
                     public void onHourChanged(WheelHourPicker picker, int hour) {
                         if (availableDates != null && !availableDates.isEmpty()) {
-                            updateMinutesPicker(daysPicker.getFormattedValue(daysPicker.getCurrentDate()) + " " + hour);
+                            if (hour <= 9) {
+                                tempString = " 0";
+                            } else {
+                                tempString = " ";
+                            }
+                            updateMinutesPicker(daysPicker.getFormattedValue(daysPicker.getCurrentDate()) + tempString + hour);
                         }
                         updateListener();
                         checkMinMaxDate(picker);

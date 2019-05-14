@@ -21,7 +21,7 @@ import static com.github.florent37.singledateandtimepicker.widget.SingleDateAndT
 public class WheelDayPicker extends WheelPicker<String> {
 
     public static final String DAY_FORMAT_PATTERN = "EEE d MMM";
-    public static final String DAY_AND_HOUR_FORMAT_PATTERN = "EEE d MMM H";
+    public static final String DAY_AND_HOUR_FORMAT_PATTERN = "EEE d MMM HH";
 
     private SimpleDateFormat simpleDateFormat;
     private SimpleDateFormat customDateFormat;
@@ -133,7 +133,6 @@ public class WheelDayPicker extends WheelPicker<String> {
     }
 
     private Date convertItemToDate(int itemPosition) {
-        Log.d("WheelDayPicker", "convertItemToDate itemPosition" + itemPosition);
         Date date = null;
         final String itemText = adapter.getItemText(itemPosition);
         final Calendar todayCalendar = Calendar.getInstance();

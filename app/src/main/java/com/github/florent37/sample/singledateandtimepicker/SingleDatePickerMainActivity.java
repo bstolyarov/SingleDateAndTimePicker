@@ -32,7 +32,7 @@ public class SingleDatePickerMainActivity extends AppCompatActivity {
         singleDateAndTimePicker.setMaxDate(null);
         singleDateAndTimePicker.setMinDate(null);
         singleDateAndTimePicker.setAvailableDates(dates);
-        singleDateAndTimePicker.setDefaultDateFromAvailable(new Date(dates.get(0)));
+//        singleDateAndTimePicker.setDefaultDateFromAvailable(new Date(dates.get(0)));
         singleDateAndTimePicker.setCyclic(false);
         singleDateAndTimePicker.addOnDateChangedListener(new SingleDateAndTimePicker.OnDateChangedListener() {
             @Override
@@ -41,6 +41,7 @@ public class SingleDatePickerMainActivity extends AppCompatActivity {
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE d MMM HH mm", Locale.US);
                 Log.d("MainActivity", "simpleDateFormat: " + simpleDateFormat.format(singleDateAndTimePicker.getDate()));
 //                display(displayed);
+//                singleDateAndTimePicker.setVisibility(View.GONE);
             }
         });
 
@@ -52,6 +53,7 @@ public class SingleDatePickerMainActivity extends AppCompatActivity {
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTimeInMillis(dates.get(2));
                 singleDateAndTimePicker.selectDateFromAvailableDates(calendar);
+//                singleDateAndTimePicker.setVisibility(View.VISIBLE);
             }
         });
     }
