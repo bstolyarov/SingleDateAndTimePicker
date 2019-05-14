@@ -301,6 +301,11 @@ public abstract class WheelPicker<V> extends View {
         setSelectedItemPosition(findIndexOfDate(date));
     }
 
+    public void selectDateFromAvailable(Date date) {
+        setSelectedItemPosition(findIndexOfDateFromAvailable(date));
+        onItemSelected();
+    }
+
     public void setListener(Listener listener) {
         this.listener = listener;
     }

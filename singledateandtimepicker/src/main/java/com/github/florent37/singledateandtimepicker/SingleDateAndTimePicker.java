@@ -554,6 +554,19 @@ public class SingleDateAndTimePicker extends LinearLayout {
         }
     }
 
+    public void selectDateFromAvailableDates(Calendar calendar) {
+        if (calendar == null) {
+            return;
+        }
+        final Date date = calendar.getTime();
+        for (WheelPicker picker : pickers) {
+            picker.selectDateFromAvailable(date);
+        }
+        if (displayDaysOfMonth) {
+            updateDaysOfMonth(availableDates, calendar.getTime());
+        }
+    }
+
     private void updateListener() {
         final Date date = getDate();
         final CharSequence format = isAmPm ? FORMAT_12_HOUR : FORMAT_24_HOUR;

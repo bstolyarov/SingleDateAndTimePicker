@@ -9,6 +9,7 @@ import com.github.florent37.singledateandtimepicker.SingleDateAndTimePicker;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -19,7 +20,7 @@ public class SingleDatePickerMainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.single_date_picker_activity_main);
 
-        ArrayList<Long> dates = new ArrayList<>();
+        final ArrayList<Long> dates = new ArrayList<>();
         dates.add(1557486900000L); //10 мая 2019 г. 11:15:00
         dates.add(1557557100000L); //11 мая 2019 г. 6:45:00
         dates.add(1557558000000L); //11 мая 2019 г. 7:00:00
@@ -48,7 +49,9 @@ public class SingleDatePickerMainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE d MMM HH mm", Locale.US);
                 Log.d("MainActivity", "simpleDateFormat: " + simpleDateFormat.format(singleDateAndTimePicker.getDate()));
-
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTimeInMillis(dates.get(2));
+                singleDateAndTimePicker.selectDateFromAvailableDates(calendar);
             }
         });
     }
