@@ -540,10 +540,9 @@ public class SingleDateAndTimePicker extends LinearLayout {
     public void setDefaultDateFromAvailable(Date date) {
         if (date != null) {
             this.defaultDate = date;
-            updateDaysOfMonth(availableDates, date);
-            for (WheelPicker picker : pickers) {
-                picker.setDefaultDateFromAvailable(defaultDate);
-            }
+            daysPicker.setDefaultDateFromAvailable(defaultDate);
+            hoursPicker.setDefaultDateFromAvailable(defaultDate);
+            minutesPicker.setDefaultDateFromAvailable(defaultDate);
         }
     }
 
