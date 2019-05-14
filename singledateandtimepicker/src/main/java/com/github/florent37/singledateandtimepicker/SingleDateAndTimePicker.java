@@ -41,7 +41,7 @@ public class SingleDateAndTimePicker extends LinearLayout {
     private static final int VISIBLE_ITEM_COUNT_DEFAULT = 7;
     private static final int PM_HOUR_ADDITION = 12;
 
-    private static final CharSequence FORMAT_24_HOUR = "EEE d MMM H:mm";
+    private static final CharSequence FORMAT_24_HOUR = "EEE d MMM HH:mm";
     private static final CharSequence FORMAT_12_HOUR = "EEE d MMM h:mm a";
 
 
