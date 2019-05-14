@@ -59,6 +59,7 @@ public class WheelDayPicker extends WheelPicker<String> {
 
     @Override
     protected void onItemSelected(int position, String item) {
+        super.onItemSelected(position, item);
         if (onDaySelectedListener != null && position != -1) {
             final Date date = convertItemToDate(position);
             onDaySelectedListener.onDaySelected(this, position, item, date);
